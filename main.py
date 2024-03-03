@@ -1,21 +1,40 @@
 import requests
+from datetime import datetime
 from dotenv import load_dotenv
 import os
+import csv
 
-load_dotenv() # "AUTH_KEY"
+load_dotenv() # loads auth key from .env file
+AUTH_KEY = os.environ.get("AUTH_KEY")
+DATA_PATH = os.environ.get("DATA_PATH")
 
-if __name__ == "__main__":
+def get_response():
     url = "https://api.density.io/v2/displays/dsp_956223069054042646"
-    auth_key = os.environ.get("AUTH_KEY")
-
     headers = {
-        "Authorization": auth_key
+        "Authorization": AUTH_KEY
     }
 
     response = requests.get(url, headers=headers)
 
-    datetime = response.json()["created_at"]
-    current_capacity = response.json()["dedicated_space"]["current_count"]
-    max_capacity = response.json()["dedicated_space"]["capacity"]
+    data = response.json()
+    current_capacity = data["dedicated_space"]["current_count"]
+    max_capacity = data["dedicated_space"]["capacity"]
+    
+    return current_capacity, max_capacity
 
-    print(datetime, current_capacity, max_capacity)
+
+if __name__ == "__main__":
+    dt = datetime.now()
+    date = dt.strftime("%Y-%m-%d")
+    time = dt.strftime("%H:%M:%S")
+    current_capacity, max_capacity = get_response()
+    
+    data = [date, time, current_capacity, max_capacity, current_capacity/max_capacity*100]
+    print(data)
+
+    # append data to csv
+    with open(DATA_PATH, "a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow(data)
+        file.close()
+        
