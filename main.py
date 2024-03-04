@@ -1,3 +1,4 @@
+#!/opt/anaconda3/bin/python
 import requests
 from datetime import datetime
 from dotenv import load_dotenv
@@ -27,9 +28,10 @@ if __name__ == "__main__":
     dt = datetime.now()
     date = dt.strftime("%Y-%m-%d")
     time = dt.strftime("%H:%M:%S")
+    day = dt.strftime("%A")
     current_capacity, max_capacity = get_response()
     
-    data = [date, time, current_capacity, max_capacity, current_capacity/max_capacity*100]
+    data = [date, time, day, current_capacity, max_capacity, current_capacity/max_capacity*100]
     print(data)
 
     # append data to csv
