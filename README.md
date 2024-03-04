@@ -1,5 +1,5 @@
 
-# RSF Occupancy Tracker README
+# RSF Occupancy Tracker
 
 ## Overview
 
